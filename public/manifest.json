@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "RESTaurantApp",
+  "name": "Search for restaurants in New York using RESTful API.",
   "icons": [
     {
       "src": "favicon.ico",

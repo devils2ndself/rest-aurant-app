@@ -24,7 +24,7 @@ function App() {
     <>
       <Navbar bg="light" expand="lg">
         <LinkContainer to="/">
-          <Navbar.Brand>New York Restaurants</Navbar.Brand>
+          <Navbar.Brand>RESTaurantApp</Navbar.Brand>
         </LinkContainer>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
