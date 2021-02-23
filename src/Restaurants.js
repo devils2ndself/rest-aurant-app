@@ -4,16 +4,18 @@ import queryString from 'query-string';
 import { useHistory } from "react-router-dom";
 import ListGroup from 'react-bootstrap/ListGroup';
 import Pagination from 'react-bootstrap/Pagination';
+import './App.css';
 
 function Restaurants(props) {
 
-    const [restaurants, setRestaurants] = useState([]);
+    const [restaurants, setRestaurants] = useState(null);
     const [page, setPage] = useState(1);
     const history = useHistory();
     let query = queryString.parse(props.query);
 
     useEffect(()=>{
         let fetchString = `https://shielded-beyond-25498.herokuapp.com/api/restaurants?page=${page}&perPage=10`;
+        setRestaurants(null);
         query = queryString.parse(props.query);
         if (query.borough != null && query.borough != "") {
             fetchString += `&borough=${query.borough}`;
@@ -33,21 +35,49 @@ function Restaurants(props) {
         setPage(prev=>(prev+1));
     }
 
+    function avg(grades) {
+        let sum = 0;
+        grades.forEach((grade) => {
+            sum += grade.score;
+        });
+        sum /= grades.length;
+        return sum.toFixed(2);
+    }
+
     return (
         <div>
             <h1>Restaurant List</h1>
             <p>The list of all restaurants from the API. You can even search by borough!</p>
-            {
-                restaurants.length != 0 
+            {   
+                restaurants == null
+                ?
+                <><h5><i>Loading..</i></h5></>
+                :
+                restaurants.length != 0
                 ?
                 <>
-                <ListGroup variant="flush">
+                 <table class="table" id="restaurant-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Cuisine</th>
+                            <th>Address</th>
+                            <th>Average Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     {
                         restaurants.map(restaurant=>(
-                            <ListGroup.Item action onClick={()=>{history.push(`/restaurant/${restaurant._id}`)}} key={restaurant._id}><b>{restaurant.name}</b> - <i> {restaurant.address.building} {restaurant.address.street}, {restaurant.borough}</i> - <u>{restaurant.cuisine}</u></ListGroup.Item>
+                            <tr onClick={()=>{history.push(`/restaurant/${restaurant._id}`)}} class="restaurant" key={restaurant._id}>
+                                <td>{restaurant.name}</td>
+                                <td>{restaurant.cuisine}</td>
+                                <td>{restaurant.address.building} {restaurant.address.street}, {restaurant.borough}</td>
+                                <td>{avg(restaurant.grades)}</td>
+                            </tr>
                         ))
                     }
-                </ListGroup>
+                    </tbody>
+                </table>
                 
                 <Pagination>
                     <Pagination.Prev onClick={()=>previousPage()} />
@@ -58,7 +88,7 @@ function Restaurants(props) {
                </Pagination>
                </>
                 :
-                <><h5><i>Nothing to see here..</i></h5></>
+                <><h5>No restaurants with such borough.. Remember: letter case is important!</h5></>
             }
         </div>
     );

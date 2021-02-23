@@ -11,7 +11,9 @@ function Restaurant(props) {
 
     useEffect(()=>{
         setLoading(true);
-        fetch(`https://shielded-beyond-25498.herokuapp.com/api/restaurants/${props.id}`).then(res=>res.json()).then(r=>{
+        fetch(`https://shielded-beyond-25498.herokuapp.com/api/restaurants/${props.id}`).then(res=>res.json()).then(r=>
+        {
+            setRestaurant(null);
             setLoading(false);
             if (!r.message) {
                 setRestaurant(r);
@@ -22,7 +24,11 @@ function Restaurant(props) {
     return (
         <div>
             {
-                (restaurant && !loading) 
+                loading
+                ?
+                <><h1><i>Loading..</i></h1><p>Wait a bit... If this is not gone, try refreshing.</p></>
+                :
+                restaurant != null
                 ?
                 <>
                 <h1>{restaurant.name}</h1>
@@ -32,6 +38,10 @@ function Restaurant(props) {
                     <Marker position={[ restaurant.address.coord[1], restaurant.address.coord[0] ]}></Marker>
                 </MapContainer>
                 <br />
+                <h3>Grades:</h3>
+                {
+                restaurant.grades.length > 0
+                ?
                 <CardDeck>
                     {
                         restaurant.grades.map(grade=>(
@@ -39,13 +49,16 @@ function Restaurant(props) {
                                 <Card.Body>
                                     <Card.Title>Grade: {grade.grade}</Card.Title>
                                     <Card.Text>
-                                    Given on: { grade.date.substring(0, 10) }
+                                    Completed: { grade.date.substring(0, 10) }
                                     </Card.Text>
                                 </Card.Body>
                             </Card>
                         ))
                     }
                 </CardDeck>
+                :
+                <p>This restaurant has not received any grades yet.</p>
+                }
                 </>
                 :
                 <>
