@@ -11,7 +11,7 @@ function Restaurant(props) {
 
     useEffect(()=>{
         setLoading(true);
-        fetch(`/api/restaurants/${props.id}`).then(res=>res.json()).then(r=>
+        fetch(`https://shielded-beyond-25498.herokuapp.com/api/restaurants/${props.id}`).then(res=>res.json()).then(r=>
         {
             setRestaurant(null);
             setLoading(false);

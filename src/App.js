@@ -51,6 +51,7 @@ function App() {
               <Route exact path="/about" render={()=>(<About />)} />
               <Route exact path="/restaurants" render={(props)=>(<Restaurants query={props.location.search} />)} />
               <Route path="/restaurant/:id" render={(props)=>(<Restaurant id={props.match.params.id} />)} />
+              <Route render={()=>(<NotFound />)} />
             </Switch>
           </Col>
         </Row>

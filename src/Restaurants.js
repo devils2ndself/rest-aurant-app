@@ -16,7 +16,7 @@ function Restaurants(props) {
     let maxRows = 10;
 
     useEffect(()=>{
-        let fetchString = `/api/restaurants?page=${page}&perPage=${maxRows}`;
+        let fetchString = `https://shielded-beyond-25498.herokuapp.com/api/restaurants?page=${page}&perPage=${maxRows}`;
         setLoading(true);
         query = queryString.parse(props.query);
         if (query.borough != null && query.borough != "") {
