@@ -10,12 +10,14 @@ function Restaurants(props) {
 
     const [restaurants, setRestaurants] = useState(null);
     const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
     const history = useHistory();
     let query = queryString.parse(props.query);
+    let maxRows = 10;
 
     useEffect(()=>{
-        let fetchString = `https://shielded-beyond-25498.herokuapp.com/api/restaurants?page=${page}&perPage=10`;
-        setRestaurants(null);
+        let fetchString = `https://shielded-beyond-25498.herokuapp.com/api/restaurants?page=${page}&perPage=${maxRows}`;
+        setLoading(true);
         query = queryString.parse(props.query);
         if (query.borough != null && query.borough != "") {
             fetchString += `&borough=${query.borough}`;
@@ -24,6 +26,7 @@ function Restaurants(props) {
         fetch(fetchString).then(res=>res.json()).then(r => {
             if (!r.message) setRestaurants(r);
             else setRestaurants([]);
+            setLoading(false);
         });
     },[page, query.borough]);
 
@@ -59,14 +62,22 @@ function Restaurants(props) {
                  <table class="table" id="restaurant-table">
                     <thead>
                         <tr>
-                            <th>Name</th>
-                            <th>Cuisine</th>
-                            <th>Address</th>
-                            <th>Average Score</th>
+                            <th width="25%">Name</th>
+                            <th width="25%">Cuisine</th>
+                            <th width="35%">Address</th>
+                            <th width="15%">Average Score</th>
                         </tr>
                     </thead>
                     <tbody>
                     {
+                        loading
+                        ?
+                        <>
+                        <tr key="Loading">
+                            <td colSpan="4">Loading...</td>
+                        </tr>
+                        </>
+                        :
                         restaurants.map(restaurant=>(
                             <tr onClick={()=>{history.push(`/restaurant/${restaurant._id}`)}} class="restaurant" key={restaurant._id}>
                                 <td>{restaurant.name}</td>
