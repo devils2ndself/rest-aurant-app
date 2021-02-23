@@ -50,12 +50,10 @@ app.delete("/api/restaurants/:index", (req,res) => {
     }).catch(err => res.status(500).json({message: err}));
 });
 
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, 'client/build')));
-    app.get('*', (req, res) => {
-      res.sendfile(path.join((__dirname, 'client/build', 'index.html')));
-    });
-}
+app.use(express.static(path.join(__dirname, 'client/build')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join((__dirname, 'client/build', 'index.html')));
+});
 
 app.use((req, res) => {
     res.status(404).send("Resource not found");
